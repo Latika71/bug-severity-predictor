@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Model files (large files)
+model/model.h5
+model/model.keras
+model/scaler.pkl
+model/label_encoder.pkl
+
+# Database
+database/bugs.db
+
+# Environment variables
+.env
+
+# Data files
+data/bugs.csv
+data/processed_bugs.csv
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
