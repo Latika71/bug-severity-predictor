@@ -1,10 +1,12 @@
 """
 predict.py — Bug Severity Prediction Logic
 """
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import numpy as np
 import pickle
-import os
 from tensorflow.keras.models import load_model
 
 # ── Paths ──
