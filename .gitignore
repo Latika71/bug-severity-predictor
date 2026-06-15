@@ -10,11 +10,7 @@ venv/
 env/
 .venv/
 
-# Model files (large files)
-model/model.h5
-model/model.keras
-model/scaler.pkl
-model/label_encoder.pkl
+
 
 # Database
 database/bugs.db
