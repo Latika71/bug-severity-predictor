@@ -10,7 +10,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # ── Config ──
-API_URL = "http://localhost:8000"   # Flask 5000 → FastAPI 8000
+API_URL = "https://bug-severity-predictor-ucxb.onrender.com"   
 
 st.set_page_config(
     page_title="Bug Severity Predictor",
