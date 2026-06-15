@@ -29,3 +29,5 @@ seaborn
 
 # Testing
 pytest
+
+PyJWT
