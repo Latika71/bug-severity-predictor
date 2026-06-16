@@ -178,7 +178,6 @@ def predict(body: PredictRequest, current_user: dict = Depends(get_current_user)
 
         return {"success": True, "result": result}
 
-    
     except Exception as e:
         print("\n" + "="*60)
         print("PREDICTION ERROR")
@@ -186,7 +185,7 @@ def predict(body: PredictRequest, current_user: dict = Depends(get_current_user)
         traceback.print_exc()
         print("="*60 + "\n")
 
-    raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {str(e)}")
 
 
 @app.get("/my-history")
