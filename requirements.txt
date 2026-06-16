@@ -4,7 +4,7 @@ pandas
 scikit-learn
 
 # Deep Learning
-tensorflow==2.15.0
+tensorflow==2.21.0
 
 # Backend
 fastapi
