@@ -31,3 +31,5 @@ seaborn
 pytest
 
 PyJWT
+
+psycopg2-binary
