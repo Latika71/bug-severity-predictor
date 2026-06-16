@@ -62,7 +62,7 @@ def _load_artifacts():
     global _model, _scaler, _encoders, _target_le
 
     if _model is None:
-        _model = load_model(os.path.join(MODEL_DIR, 'model.keras'))
+        _model = load_model(os.path.join(MODEL_DIR, 'model_legacy.h5'))
 
         with open(os.path.join(MODEL_DIR, 'scaler.pkl'), 'rb') as f:
             _scaler = pickle.load(f)
