@@ -1,13 +1,11 @@
 """
-predict.py — Bug Severity Prediction Logic
+predict.py — Bug Severity Prediction Logic (scikit-learn version)
 """
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 import numpy as np
 import pickle
-from tensorflow.keras.models import load_model
 
 # ── Paths ──
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -31,10 +29,8 @@ FEATURE_ORDER = [
     'is_regression', 'is_security_related', 'has_workaround',
     'customer_reported', 'sla_breached'
 ]
-
 CAT_COLS = ['bug_type', 'component', 'environment', 'platform',
             'operating_system', 'browser', 'reporter_role', 'module', 'status']
-
 DEFAULTS = {
     'lines_of_code':     25000,
     'open_issues_count': 250,
@@ -49,7 +45,6 @@ DEFAULTS = {
     'has_workaround':    0,
     'error_code':        350
 }
-
 SEVERITY_COLORS = {
     'Critical': '#e74c3c',
     'High':     '#e67e22',
@@ -57,16 +52,15 @@ SEVERITY_COLORS = {
     'Low':      '#2ecc71',
 }
 
+
 def _load_artifacts():
     """Model + scaler + encoders ek baar load karo"""
     global _model, _scaler, _encoders, _target_le
-
     if _model is None:
-        _model = load_model(os.path.join(MODEL_DIR, 'model_legacy.h5'))
-
+        with open(os.path.join(MODEL_DIR, 'model_sklearn.pkl'), 'rb') as f:
+            _model = pickle.load(f)
         with open(os.path.join(MODEL_DIR, 'scaler.pkl'), 'rb') as f:
             _scaler = pickle.load(f)
-
         with open(os.path.join(MODEL_DIR, 'label_encoder.pkl'), 'rb') as f:
             data = pickle.load(f)
             _encoders = data['features']
@@ -75,7 +69,6 @@ def _load_artifacts():
 
 def predict_severity(input_dict: dict) -> dict:
     _load_artifacts()
-
     for k, v in DEFAULTS.items():
         if k not in input_dict or input_dict[k] is None:
             input_dict[k] = v
@@ -93,11 +86,11 @@ def predict_severity(input_dict: dict) -> dict:
 
     X        = np.array([[row[f] for f in FEATURE_ORDER]])
     X_scaled = _scaler.transform(X)
-    probs    = _model.predict(X_scaled, verbose=0)[0]
 
-    predicted_idx   = int(np.argmax(probs))
-    predicted_label = _target_le.inverse_transform([predicted_idx])[0]
-    confidence      = float(probs[predicted_idx]) * 100
+    probs           = _model.predict_proba(X_scaled)[0]
+    predicted_idx    = int(np.argmax(probs))
+    predicted_label  = _target_le.inverse_transform([predicted_idx])[0]
+    confidence       = float(probs[predicted_idx]) * 100
 
     all_probs = {
         cls: round(float(p) * 100, 2)
