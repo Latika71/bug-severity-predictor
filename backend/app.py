@@ -1,6 +1,17 @@
 import sys, os                                                   
 sys.path.append(os.path.dirname(os.path.abspath(__file__))) 
 
+# ── TEMPORARY DEBUG ──
+try:
+    from predict import predict_severity
+    from database import init_db, save_prediction, get_all_predictions, get_user_predictions, get_stats, get_all_users, get_all_login_logs, create_user, get_user_by_username, save_login_log
+    from auth import hash_password, verify_password, create_token, decode_token
+    print("✅ ALL IMPORTS SUCCESSFUL")
+except Exception as debug_e:
+    import traceback
+    print("❌ IMPORT FAILED:")
+    traceback.print_exc()
+
 
 """
 app.py — Bug Severity Predictor (Flask → FastAPI)
