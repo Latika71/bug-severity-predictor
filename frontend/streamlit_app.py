@@ -431,7 +431,7 @@ def show_my_dashboard():
         else:
             st.info("Koi data nahi abhi! Pehle predict karo.")
     except:
-        st.error("❌ API offline!")
+        st.error(f"❌ Error: {str(e)}")
 
 
 # ════════════════════════════════════════
