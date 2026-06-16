@@ -93,7 +93,7 @@ def show_login_page():
                         res = requests.post(f"{API_URL}/login", json={
                             "username": username,
                             "password": password
-                        })
+                        }, timeout=60)
                         data = res.json()
                         if res.status_code == 200 and data.get("success"):
                             st.session_state.token    = data["token"]
@@ -105,8 +105,8 @@ def show_login_page():
                             
                         else:
                             st.error(f"❌ {data.get('detail', 'Login failed')}")
-                    except:
-                        pass
+                    except Exception as e:
+                        st.error(f"❌ Error: {str(e)}")
                 else:
                     st.warning("Username aur password dono bharo!")
 
@@ -125,14 +125,14 @@ def show_login_page():
                             "email":    reg_email,
                             "password": reg_pass,
                             "role":     reg_role
-                        })
+                        }, timeout=60)
                         data = res.json()
                         if res.status_code == 200 and data.get("success"):
                             st.success ("✅ Account created successfully! Please login to continue.")
                         else:
                             st.error(f"❌ {data.get('detail', 'Registration failed')}")
-                    except:
-                        pass
+                    except Exception as e:
+                        st.error(f"❌ Error: {str(e)}")
                 else:
                     st.warning("Saari fields bharo!")
 
@@ -241,7 +241,7 @@ def show_predict_page():
         }
         try:
             res  = requests.post(f"{API_URL}/predict",
-                                 json=payload, headers=auth_headers())
+                                 json=payload, headers=auth_headers(), timeout=60)
             data = res.json()
 
             if res.status_code == 401:
@@ -298,8 +298,8 @@ def show_predict_page():
                 st.info(actions[sev])
             else:
                 st.error(f"Error: {data.get('detail','Unknown')}")
-        except:
-            st.error("❌ API offline! Run: `uvicorn app:app --reload --port 8000`")
+        except Exception as e:
+            st.error(f"❌ Error: {str(e)}")
 
 
 # ════════════════════════════════════════
@@ -314,7 +314,7 @@ def show_my_history():
 
     try:
         res  = requests.get(f"{API_URL}/my-history?limit={limit}",
-                            headers=auth_headers())
+                            headers=auth_headers(), timeout=60)
         data = res.json()
 
         if res.status_code == 401:
@@ -390,8 +390,8 @@ def show_my_dashboard():
     st.markdown("---")
 
     try:
-        res  = requests.get(f"{API_URL}/my-stats", headers=auth_headers())
-        hres = requests.get(f"{API_URL}/my-history?limit=100", headers=auth_headers())
+        res  = requests.get(f"{API_URL}/my-stats", headers=auth_headers(), timeout=60)
+        hres = requests.get(f"{API_URL}/my-history?limit=100", headers=auth_headers(), timeout=60)
         stats  = res.json().get("stats", {})
         h_data = hres.json().get("data", [])
 
@@ -430,7 +430,7 @@ def show_my_dashboard():
                     st.plotly_chart(fig2, use_container_width=True)
         else:
             st.info("Koi data nahi abhi! Pehle predict karo.")
-    except:
+    except Exception as e:
         st.error(f"❌ Error: {str(e)}")
 
 
@@ -452,9 +452,9 @@ def show_admin_panel():
     # ── TAB 1: Overall Stats ──
     with tab1:
         try:
-            res   = requests.get(f"{API_URL}/admin/stats",   headers=auth_headers())
+            res   = requests.get(f"{API_URL}/admin/stats",   headers=auth_headers(), timeout=60)
             hres  = requests.get(f"{API_URL}/admin/all-predictions?limit=200",
-                                  headers=auth_headers())
+                                  headers=auth_headers(), timeout=60)
             stats  = res.json().get("stats", {})
             h_data = hres.json().get("data", [])
 
@@ -501,8 +501,8 @@ def show_admin_panel():
                             paper_bgcolor='rgba(0,0,0,0)',
                             font_color='#c0c8e0', height=320)
                         st.plotly_chart(fig2, use_container_width=True)
-        except:
-            st.error("❌ API offline!")
+        except Exception as e:
+            st.error(f"❌ Error: {str(e)}")
 
     # ── TAB 2: All Predictions ──
     with tab2:
@@ -511,7 +511,7 @@ def show_admin_panel():
             limit_option = st.selectbox("Show last", [20, 50, 100, 200, "All"], key="admin_pred_limit")
             limit = 99999 if limit_option == "All" else limit_option
             res   = requests.get(f"{API_URL}/admin/all-predictions?limit={limit}",
-                                  headers=auth_headers())
+                                  headers=auth_headers(), timeout=60)
             data  = res.json()
 
             if data.get("success") and data["data"]:
@@ -542,7 +542,7 @@ def show_admin_panel():
     # ── TAB 3: All Users ──
     with tab3:
         try:
-            res  = requests.get(f"{API_URL}/admin/all-users", headers=auth_headers())
+            res  = requests.get(f"{API_URL}/admin/all-users", headers=auth_headers(), timeout=60)
             data = res.json()
 
             if data.get("success") and data["data"]:
@@ -563,13 +563,13 @@ def show_admin_panel():
                     df.to_csv(index=False), "all_users.csv", "text/csv")
             else:
                 st.info("Koi user nahi abhi tak.")
-        except:
-            st.error("❌ API offline!")
+        except Exception as e:
+            st.error(f"❌ Error: {str(e)}")
 
     # ── TAB 4: Login Logs ──
     with tab4:
         try:
-            res  = requests.get(f"{API_URL}/admin/login-logs", headers=auth_headers())
+            res  = requests.get(f"{API_URL}/admin/login-logs", headers=auth_headers(), timeout=60)
             data = res.json()
 
             if data.get("success") and data["data"]:
@@ -580,8 +580,8 @@ def show_admin_panel():
                     df.to_csv(index=False), "login_logs.csv", "text/csv")
             else:
                 st.info("Koi login log nahi abhi tak.")
-        except:
-            st.error("❌ API offline!")
+        except Exception as e:
+            st.error(f"❌ Error: {str(e)}")
 
 
 # ════════════════════════════════════════
