@@ -166,7 +166,7 @@ The model achieves **~91% accuracy** on a held-out test set.
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/<your-username>/bug-severity-predictor.git
+git clone https://github.com/latika71/bug-severity-predictor.git
 cd bug-severity-predictor
 ```
 
